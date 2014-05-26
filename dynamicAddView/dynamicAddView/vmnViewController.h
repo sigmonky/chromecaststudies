@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VMNGCCReadyViewController.h"
 
-@interface vmnViewController : UIViewController
+@interface vmnViewController : UIViewController <VMNGCCReadyView>
 - (IBAction)chromeCastTapped:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *chromeCastBtn;
 
 @end

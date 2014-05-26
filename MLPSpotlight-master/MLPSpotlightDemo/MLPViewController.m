@@ -17,13 +17,14 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [self.view setAlpha:0];
+   /* [self.view setAlpha:0];
     [UIView animateWithDuration:0.2
                           delay:0.25
                         options:UIViewAnimationCurveEaseOut
                      animations:^{
                          [self.view setAlpha:1.0];
                      }completion:nil];
+*/
 }
 
 - (IBAction)spotlightToggle:(id)sender

@@ -8,6 +8,7 @@
 
 #import "vmnViewController.h"
 #import "vmnCustomView.h"
+#import "MLPSpotlight.h"
 
 @interface vmnViewController ()
 
@@ -23,16 +24,63 @@ vmnCustomView *customView;
     
 }
 
+- (void) viewDidAppear:(BOOL)animated {
+    
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if ([defaults objectForKey:@"callToActionSeen"] == nil ) {
+        
+        [MLPSpotlight addSpotlightInView:self.view atPoint:self.chromeCastBtn.center];
+        
+        MLPSpotlight *overlay = [[MLPSpotlight alloc] initWithFrame:self.chromeCastBtn.frame withSpotlightAtPoint:self.chromeCastBtn.center];
+        
+        int labelX = self.view.center.x - 87;
+        int labelY = self.view.center.y - 50;
+        CGRect labelFrame = CGRectMake( labelX, labelY, 175, 100 );
+        UILabel* label = [[UILabel alloc] initWithFrame: labelFrame];
+        label.numberOfLines = 0;
+        label.lineBreakMode = NSLineBreakByWordWrapping;
+        label.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        label.textAlignment = NSTextAlignmentCenter;
+        [label setText: @"Touch To Play Videos on your TV"];
+        [label setTextColor: [UIColor whiteColor]];
+        [self.view addSubview: label];
+        
+    }
+    
+    
+
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+
+
 - (IBAction)chromeCastTapped:(id)sender {
+     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    UIViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"testVC"];
-    [self presentViewController:controller animated:YES completion:NULL];
+    if ([defaults objectForKey:@"callToActionSeen"] == nil ) {
+         NSArray *existingSpotlights = [MLPSpotlight spotlightsInView:self.view];
+        if(existingSpotlights.count){
+            [MLPSpotlight removeSpotlightsInView:self.view];
+        }
+        [defaults setObject:@1 forKey:@"callToActionSeen"];
+        [defaults synchronize];
+
+    } else {
+        VMNGCCReadyViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"testVC"];
+        controller.delegate = self;
+        
+        [self presentViewController:controller animated:YES completion:NULL];   
+    }
+    
+    
+
     
     /*if ( customView == nil) {
         customView = [vmnCustomView customView];
@@ -68,5 +116,11 @@ vmnCustomView *customView;
     }];*/
 
 
+
+    
+}
+#pragma mark ReadyView delegates
+- (void) disconnectDevice {
+    NSLog(@"disconnecting...");
 }
 @end

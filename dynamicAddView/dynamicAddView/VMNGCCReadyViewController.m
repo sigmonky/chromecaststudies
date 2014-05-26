@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 Viacom. All rights reserved.
 //
 
-#import "vmnCustomViewController.h"
+#import "VMNGCCReadyViewController.h"
 
-@interface vmnCustomViewController ()
+@interface VMNGCCReadyViewController ()
 
 @end
 
-@implementation vmnCustomViewController
+@implementation VMNGCCReadyViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -26,7 +26,22 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    int lineX = self.readyLabel.frame.origin.x;
+    int lineY = self.readyLabel.frame.origin.y + self.readyLabel.frame.size.height + 3;
+    int lineWidth = self.readyLabel.frame.size.width;
+    
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    [path moveToPoint:CGPointMake(lineX,lineY)];
+    [path addLineToPoint:CGPointMake(lineX + lineWidth, lineY)];
+    
+    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+    shapeLayer.path = [path CGPath];
+    shapeLayer.strokeColor = [[UIColor blackColor] CGColor];
+    shapeLayer.lineWidth = 1.0;
+    shapeLayer.fillColor = [[UIColor clearColor] CGColor];
+    
+    [self.view.layer addSublayer:shapeLayer];
 }
 
 - (void)didReceiveMemoryWarning
@@ -47,6 +62,11 @@
 */
 
 - (IBAction)doneButton:(id)sender {
+    [[self presentingViewController] dismissViewControllerAnimated:TRUE completion:nil];
+}
+
+- (IBAction)disConnectDevice:(id)sender {
+    [self.delegate disconnectDevice];
     [[self presentingViewController] dismissViewControllerAnimated:TRUE completion:nil];
 }
 @end

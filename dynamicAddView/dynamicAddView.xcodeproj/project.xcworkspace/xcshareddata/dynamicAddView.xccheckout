@@ -5,16 +5,16 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>86748208-0857-418A-A0CE-9DF284864826</string>
+	<string>809EA15B-F69B-4268-9C2F-11E57E62B7BA</string>
 	<key>IDESourceControlProjectName</key>
-	<string>MLPSpotlightDemo</string>
+	<string>dynamicAddView</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>93B0B435-1673-4F8A-8912-A8DC10EC1427</key>
 		<string>ssh://github.com/sigmonky/chromecaststudies.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>MLPSpotlight_hold/MLPSpotlightDemo.xcodeproj/project.xcworkspace</string>
+	<string>dynamicAddView/dynamicAddView.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>93B0B435-1673-4F8A-8912-A8DC10EC1427</key>
