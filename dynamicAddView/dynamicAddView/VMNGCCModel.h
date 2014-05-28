@@ -10,18 +10,21 @@
 
 
 typedef enum {
-    DISCONNECTED,
-    CONNECTED,
-    SELECTED,
-    LOADED,
-    PAUSED,
-    PLAYING,
-    BUFFERING
+    DEVICESUNDETECTED,
+    DEVICESDETECTED,
+    DEVICESELECTED,
+    DEVICECONNECTED,
+    DEVICEDISCONNECTED,
+    MEDIAPAUSED,
+    MEDIAPLAYING,
+    MEDIABUFFERING,
+    MEDIASTOPPED
 } VMNGCCPlayStates;
 
 @interface VMNGCCModel : NSObject
 
 @property (nonatomic,assign) VMNGCCPlayStates playState;
++ (VMNGCCModel *)sharedInstance;
 
 
 @end

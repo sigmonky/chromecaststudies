@@ -9,5 +9,13 @@
 #import "VMNGCCModel.h"
 
 @implementation VMNGCCModel
-
++ (instancetype)sharedInstance {
+	__strong static VMNGCCModel *_sharedObject = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+	    _sharedObject = [self new];
+	});
+    
+	return _sharedObject;
+}
 @end
