@@ -28,16 +28,13 @@ static NSString * kReceiverAppID;
 
     kReceiverAppID=@"011C45D7";
     [VMNGCCFacade sharedInstance].appID = @"011C45D7";
+    [VMNGCCFacade sharedInstance].delegate = (id)self;
     
-    [[VMNGCCFacade sharedInstance] scan];
-/*#ifdef MOCK
-    NSLog(@"I got fake devices");
-#else
-    self.deviceScanner = [[GCKDeviceScanner alloc] init];
-    [self.deviceScanner addListener:self];
-    [self.deviceScanner startScan];
-#endif
- */
+    if ( [VMNGCCFacade sharedInstance].getVMNGCCPlayState == DEVICESUNDETECTED) {
+        self.gccButton.hidden = TRUE;
+        [[VMNGCCFacade sharedInstance] scan];
+    }
+
 
 }
 
@@ -109,10 +106,24 @@ didReceiveStatusForApplication:(GCKApplicationMetadata *)applicationMetadata {
 }
  */
 
+#pragma mark VMNGCCFacade Delegate Methods -- Scanning
+- (void) devicesDetected:(NSInteger)numDevices {
+    NSLog(@"num devices %ld",(long)numDevices);
+    if ( numDevices > 0 ) {
+        self.gccButton.hidden = FALSE;
+    }
+}
+
+- (IBAction)gccButtonClicked:(id)sender {
+    NSArray *devices = [[VMNGCCFacade sharedInstance] getDevices];
+    
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 @end

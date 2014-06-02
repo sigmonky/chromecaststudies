@@ -16,7 +16,11 @@ GCKDeviceScannerListener,
 GCKDeviceManagerDelegate,
 GCKMediaControlChannelDelegate,
 UIActionSheetDelegate,
-GCKCastChannelHandler
+GCKCastChannelHandler,
+VMNGCCFacade
 >
+@property (weak, nonatomic) IBOutlet UIButton *gccButton;
+
+- (IBAction)gccButtonClicked:(id)sender;
 
 @end

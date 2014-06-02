@@ -17,6 +17,10 @@
 	    _sharedObject = [self new];
 	});
     
+    _sharedObject.vmnGCCModel = [VMNGCCModel sharedInstance];
+    
+    _sharedObject.vmnGCCModel.playState = DEVICESUNDETECTED;
+    
 	return _sharedObject;
 }
 
@@ -24,7 +28,7 @@
 - (void)scan {
     //setup
 #ifdef MOCK
-    NSLog(@"I got fake devices");
+    [self.delegate devicesDetected:(NSInteger)3];
 #else
     self.deviceScanner = [[GCKDeviceScanner alloc] init];
     [self.deviceScanner addListener:self];
@@ -33,16 +37,37 @@
     //common code
 }
 
+- (NSArray*) getDevices {
+    NSMutableArray *deviceList;
+#ifdef MOCK
+    [NSMutableArray arrayWithCapacity:1];
+    [deviceList addObject:@"mock device"];
+#else
+     deviceList = [NSMutableArray arrayWithCapacity:self.deviceScanner.devices.count];
+    for (GCKDevice *device in self.deviceScanner.devices) {
+        [deviceList addObject:device.friendlyName];
+    }
+#endif
+    return (NSArray *)deviceList;
+}
 
+- (void) selectDevice:(NSInteger)deviceIndex {
+    
+    
+}
 
 - (void) connect {
-    
+
+#ifdef MOCK
+#else
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
     self.deviceManager =
     [[GCKDeviceManager alloc] initWithDevice:self.deviceScanner.devices[0]
                            clientPackageName:[info objectForKey:@"CFBundleIdentifier"]];
     self.deviceManager.delegate = self;
     [self.deviceManager connect];
+
+#endif
     
 }
 
@@ -52,7 +77,9 @@
 - (void)deviceDidComeOnline:(GCKDevice *)device {
     NSLog(@"listening....");
     NSLog(@"device count %d",self.deviceScanner.devices.count);
-    [self connect];
+    //[self connect];
+    self.vmnGCCModel.playState = DEVICESDETECTED;
+    [self.delegate devicesDetected:self.deviceScanner.devices.count];
 }
 
 
@@ -106,7 +133,10 @@ didReceiveStatusForApplication:(GCKApplicationMetadata *)applicationMetadata {
     self.applicationMetadata = applicationMetadata;
 }
 
-
+#pragma mark playState getter
+- (VMNGCCPlayStates) getVMNGCCPlayState {
+    return [VMNGCCModel sharedInstance].playState;
+}
 
 
 @end
