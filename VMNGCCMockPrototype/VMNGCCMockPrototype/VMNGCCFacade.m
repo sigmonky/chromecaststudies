@@ -8,42 +8,47 @@
 
 #import "VMNGCCFacade.h"
 
+NSTimer *_mockLatency;
+NSInteger _deviceIndex = -1;
+
 @implementation VMNGCCFacade
+
 
 + (instancetype)sharedInstance {
 	__strong static VMNGCCFacade *_sharedObject = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 	    _sharedObject = [self new];
+        _sharedObject.playState = DEVICESUNDETECTED;
 	});
     
-    _sharedObject.vmnGCCModel = [VMNGCCModel sharedInstance];
+   
     
-    _sharedObject.vmnGCCModel.playState = DEVICESUNDETECTED;
+    
     
 	return _sharedObject;
 }
 
-
+#pragma mark convenience methods
 - (void)scan {
     //setup
 #ifdef MOCK
-    [self.delegate devicesDetected:(NSInteger)3];
+    self.playState = DEVICESDETECTED;
+    [self.delegate devicesDetected:(NSInteger)1];
 #else
     self.deviceScanner = [[GCKDeviceScanner alloc] init];
     [self.deviceScanner addListener:self];
     [self.deviceScanner startScan];
+    //see deviceDidComeOnline -- the scan result delegate
 #endif
     //common code
 }
 
 - (NSArray*) getDevices {
-    NSMutableArray *deviceList;
+    NSMutableArray *deviceList = [[NSMutableArray alloc] init];
 #ifdef MOCK
-    [NSMutableArray arrayWithCapacity:1];
     [deviceList addObject:@"mock device"];
 #else
-     deviceList = [NSMutableArray arrayWithCapacity:self.deviceScanner.devices.count];
     for (GCKDevice *device in self.deviceScanner.devices) {
         [deviceList addObject:device.friendlyName];
     }
@@ -52,17 +57,31 @@
 }
 
 - (void) selectDevice:(NSInteger)deviceIndex {
-    
+#ifdef MOCK
+#else
+#endif
     
 }
 
-- (void) connect {
 
+
+
+- (void) connect:(NSInteger)deviceIndex {
+    NSLog(@"connecting device %d",deviceIndex);
+    _deviceIndex = deviceIndex;
 #ifdef MOCK
+    
+    _mockLatency = [NSTimer
+                    scheduledTimerWithTimeInterval:1.0
+                    target:self
+                    selector:@selector(stopConnectionAnimation)
+                    userInfo:nil
+                    repeats:NO];
+    
 #else
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
     self.deviceManager =
-    [[GCKDeviceManager alloc] initWithDevice:self.deviceScanner.devices[0]
+    [[GCKDeviceManager alloc] initWithDevice:self.deviceScanner.devices[deviceIndex]
                            clientPackageName:[info objectForKey:@"CFBundleIdentifier"]];
     self.deviceManager.delegate = self;
     [self.deviceManager connect];
@@ -71,6 +90,28 @@
     
 }
 
+- (void) stopConnectionAnimation {
+    
+    [_mockLatency invalidate];
+    self.playState = DEVICECONNECTED;
+    self.deviceName = @"Mock Device";
+    [self.delegate deviceConnected];
+    
+}
+
+
+- (void) disconnect {
+#ifdef MOCK
+    self.playState = DEVICESDETECTED;
+    [self.delegate deviceDisconnected:nil];
+#else
+    [self.deviceManager disconnect];
+#endif
+}
+
+
+
+
 
 
 #pragma mark - GCKDeviceScannerListener
@@ -78,7 +119,7 @@
     NSLog(@"listening....");
     NSLog(@"device count %d",self.deviceScanner.devices.count);
     //[self connect];
-    self.vmnGCCModel.playState = DEVICESDETECTED;
+    self.playState = DEVICESDETECTED;
     [self.delegate devicesDetected:self.deviceScanner.devices.count];
 }
 
@@ -86,8 +127,6 @@
 #pragma mark - GCKDeviceManagerDelegate
 
 - (void)deviceManagerDidConnect:(GCKDeviceManager *)deviceManager {
-    //[self logStatus:@"connected!!"];
-    //[self updateButtonStates];
     [self.deviceManager launchApplication:self.appID];
 }
 
@@ -95,9 +134,13 @@
 didConnectToCastApplication:(GCKApplicationMetadata *)applicationMetadata
             sessionID:(NSString *)sessionID
   launchedApplication:(BOOL)launchedApplication {
-    NSLog(@"connected to app...%d",launchedApplication);
-    //[self logStatus:@"application has launched"];
-    //[self initializeCustomChannel];
+    
+    self.playState = DEVICECONNECTED;
+    
+    GCKDevice *device = self.deviceScanner.devices[_deviceIndex];
+    self.deviceName = device.friendlyName;
+
+    [self.delegate deviceConnected];
 }
 
 - (void)deviceManager:(GCKDeviceManager *)deviceManager
@@ -116,15 +159,17 @@ didFailToConnectWithError:(GCKError *)error {
     //[self updateButtonStates];
 }
 
-- (void)deviceManager:(GCKDeviceManager *)deviceManager didDisconnectWithError:(GCKError *)error {
+
+- (void)deviceManager:(GCKDeviceManager *)deviceManager
+didDisconnectWithError:(GCKError *)error {
     NSLog(@"Received notification that device disconnected");
     
     if (error != nil) {
         //[self showError:error];
     }
+    self.playState = DEVICESDETECTED;
+    [self.delegate deviceDisconnected:error];
     
-    //[self deviceDisconnected];
-    //[self updateButtonStates];
     
 }
 
@@ -135,7 +180,7 @@ didReceiveStatusForApplication:(GCKApplicationMetadata *)applicationMetadata {
 
 #pragma mark playState getter
 - (VMNGCCPlayStates) getVMNGCCPlayState {
-    return [VMNGCCModel sharedInstance].playState;
+    return self.playState;
 }
 
 

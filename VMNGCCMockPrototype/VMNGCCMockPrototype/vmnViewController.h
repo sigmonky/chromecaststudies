@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <GoogleCast/GoogleCast.h>
 #import "VMNGCCFacade.h"
+#import "VMNGCCReadyViewController.h"
 
 @interface vmnViewController : UIViewController
 <
@@ -17,7 +18,8 @@ GCKDeviceManagerDelegate,
 GCKMediaControlChannelDelegate,
 UIActionSheetDelegate,
 GCKCastChannelHandler,
-VMNGCCFacade
+VMNGCCFacade,
+VMNGCCReadyView
 >
 @property (weak, nonatomic) IBOutlet UIButton *gccButton;
 

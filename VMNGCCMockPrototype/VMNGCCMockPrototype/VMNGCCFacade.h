@@ -7,15 +7,29 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #import <GoogleCast/GoogleCast.h>
-#import "VMNGCCModel.h"
 
 
 @protocol VMNGCCFacade <NSObject>
 
 - (void) devicesDetected:(NSInteger)numDevices;
+- (void) deviceConnected;
+- (void) deviceDisconnected:(NSError *)error;
 @end
+
+
+typedef enum {
+    DEVICESUNDETECTED,
+    DEVICESDETECTED,
+    DEVICESELECTED,
+    DEVICECONNECTED,
+    DEVICEDISCONNECTED,
+    MEDIAPAUSED,
+    MEDIAPLAYING,
+    MEDIABUFFERING,
+    MEDIASTOPPED
+} VMNGCCPlayStates;
+
 
 
 @interface VMNGCCFacade : NSObject
@@ -27,8 +41,8 @@
     GCKCastChannelHandler
 >
     + (VMNGCCFacade *)sharedInstance;
+    @property (nonatomic,assign) VMNGCCPlayStates playState;
     @property id <VMNGCCFacade> delegate;
-    @property VMNGCCModel *vmnGCCModel;
     @property GCKMediaControlChannel *mediaControlChannel;
     @property GCKApplicationMetadata *applicationMetadata;
     @property GCKDevice *selectedDevice;
@@ -38,11 +52,14 @@
     @property(nonatomic, strong) GCKDeviceManager *deviceManager;
     @property(nonatomic, readonly) GCKMediaInformation *mediaInformation;
     @property(nonatomic,strong) NSString *appID;
+    @property(nonatomic,strong) NSString *deviceName;
+
 
 - (void)scan;
 - (NSArray *) getDevices;
 - (void)select:(NSInteger)deviceIndex;
-- (void)connect;
+- (void)connect:(NSInteger)deviceIndex;
+- (void)disconnect;
 - (VMNGCCPlayStates) getVMNGCCPlayState;
 
 @end

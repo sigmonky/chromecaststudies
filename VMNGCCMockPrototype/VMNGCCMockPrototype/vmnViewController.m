@@ -32,11 +32,94 @@ static NSString * kReceiverAppID;
     
     if ( [VMNGCCFacade sharedInstance].getVMNGCCPlayState == DEVICESUNDETECTED) {
         self.gccButton.hidden = TRUE;
+        [self.gccButton setTintColor:[UIColor lightGrayColor]];
         [[VMNGCCFacade sharedInstance] scan];
     }
 
 
 }
+
+
+#pragma mark client app methods
+- (IBAction)gccButtonClicked:(id)sender {
+    
+    UIActionSheet *sheet;
+    VMNGCCReadyViewController *controller;
+    NSArray *availableDevices;
+    switch ( [[VMNGCCFacade sharedInstance] getVMNGCCPlayState] ) {
+        case DEVICESELECTED:
+            break;
+        case DEVICESDETECTED:
+            //UIButton *chromecastButton = (UIButton *)self.chromeCastBtn;
+            sheet =
+            [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Connect to Device", nil)
+                                        delegate:(id)self
+                               cancelButtonTitle:nil
+                          destructiveButtonTitle:nil
+                               otherButtonTitles:nil];
+            
+            availableDevices = [[VMNGCCFacade sharedInstance] getDevices];
+            for (NSString *device in availableDevices) {
+                [sheet addButtonWithTitle:device];
+            }
+            
+            [sheet addButtonWithTitle:@"cancel"];
+            sheet.cancelButtonIndex = sheet.numberOfButtons-1;
+            
+            //show list of available devices
+            [sheet showInView:self.view];
+            
+            
+            break;
+        case DEVICECONNECTED:
+            controller = [self.storyboard instantiateViewControllerWithIdentifier:@"deviceConnected"];
+             controller.delegate = self;
+             
+             [self presentViewController:controller animated:YES completion:NULL];
+            controller.deviceNameLbl.text = [VMNGCCFacade sharedInstance].deviceName;
+            
+            break;
+        case MEDIAPLAYING:
+            /*
+             controller = [self.storyboard instantiateViewControllerWithIdentifier:@"playOrDisconnect"];
+             controller.delegate = self;
+             
+             [self presentViewController:controller animated:YES completion:NULL];
+             
+             */
+            break;
+        default:
+            break;
+            
+            
+    }
+    
+    
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSLog(@"button clicked = %d",buttonIndex);
+    if (buttonIndex == actionSheet.cancelButtonIndex) {
+        NSLog(@"connection cancelled...");
+    } else {
+        [[VMNGCCFacade sharedInstance] connect:buttonIndex];
+        [self deviceConnectionAnimation];
+        
+    }
+    
+}
+
+- (void) deviceConnectionAnimation {
+    
+    self.gccButton.imageView.animationImages =
+    @[ [UIImage imageNamed:@"icon_cast_on0.png"], [UIImage imageNamed:@"icon_cast_on1.png"],
+       [UIImage imageNamed:@"icon_cast_on2.png"], [UIImage imageNamed:@"icon_cast_on1.png"] ];
+    self.gccButton.imageView.animationDuration = 1;
+    [self.gccButton.imageView startAnimating];
+    
+}
+
+
 
 /*
 #pragma mark - GCKDeviceScannerListener
@@ -108,21 +191,37 @@ didReceiveStatusForApplication:(GCKApplicationMetadata *)applicationMetadata {
 
 #pragma mark VMNGCCFacade Delegate Methods -- Scanning
 - (void) devicesDetected:(NSInteger)numDevices {
-    NSLog(@"num devices %ld",(long)numDevices);
+    
     if ( numDevices > 0 ) {
         self.gccButton.hidden = FALSE;
     }
 }
 
-- (IBAction)gccButtonClicked:(id)sender {
-    NSArray *devices = [[VMNGCCFacade sharedInstance] getDevices];
+
+- (void) deviceConnected {
+    
+    [self.gccButton.imageView stopAnimating];
+    [self.gccButton setTintColor:[UIColor blueColor]];
     
 }
+
+- (void) deviceDisconnected:(NSError *)error {
+    [self.gccButton setTintColor:[UIColor lightGrayColor]];
+}
+
+
+#pragma mark application delegate methods
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark VMNGCCReadyViewController Delegates
+- (void) disconnectDevice {
+    
+    [[VMNGCCFacade sharedInstance] disconnect];
 }
 
 

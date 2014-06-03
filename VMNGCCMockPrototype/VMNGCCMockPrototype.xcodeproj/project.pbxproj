@@ -69,6 +69,7 @@
 		BE4DA0A5193D09D900D11E55 /* video_thumb_mini.png in Resources */ = {isa = PBXBuildFile; fileRef = BE4DA078193D09D900D11E55 /* video_thumb_mini.png */; };
 		BE4DA0A6193D09D900D11E55 /* video_thumb_mini@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BE4DA079193D09D900D11E55 /* video_thumb_mini@2x.png */; };
 		BE4DA0A9193D22CC00D11E55 /* VMNGCCModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE4DA0A8193D22CC00D11E55 /* VMNGCCModel.m */; };
+		BEA077A9193E5ADE003DCB00 /* VMNGCCReadyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BEA077A8193E5ADE003DCB00 /* VMNGCCReadyViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -151,6 +152,8 @@
 		BE4DA079193D09D900D11E55 /* video_thumb_mini@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video_thumb_mini@2x.png"; sourceTree = "<group>"; };
 		BE4DA0A7193D22CC00D11E55 /* VMNGCCModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMNGCCModel.h; sourceTree = "<group>"; };
 		BE4DA0A8193D22CC00D11E55 /* VMNGCCModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMNGCCModel.m; sourceTree = "<group>"; };
+		BEA077A7193E5ADE003DCB00 /* VMNGCCReadyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMNGCCReadyViewController.h; sourceTree = "<group>"; };
+		BEA077A8193E5ADE003DCB00 /* VMNGCCReadyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMNGCCReadyViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,6 +216,8 @@
 		BE3B5F32193790A400930E49 /* VMNGCCMockPrototype */ = {
 			isa = PBXGroup;
 			children = (
+				BEA077A7193E5ADE003DCB00 /* VMNGCCReadyViewController.h */,
+				BEA077A8193E5ADE003DCB00 /* VMNGCCReadyViewController.m */,
 				BE4DA0AA193D22D900D11E55 /* Model */,
 				BE3B5F3B193790A400930E49 /* vmnAppDelegate.h */,
 				BE3B5F3C193790A400930E49 /* vmnAppDelegate.m */,
@@ -462,6 +467,7 @@
 			files = (
 				BE3B5F3D193790A400930E49 /* vmnAppDelegate.m in Sources */,
 				BE3B5F43193790A400930E49 /* vmnViewController.m in Sources */,
+				BEA077A9193E5ADE003DCB00 /* VMNGCCReadyViewController.m in Sources */,
 				BE3B5F39193790A400930E49 /* main.m in Sources */,
 				BE4DA0A9193D22CC00D11E55 /* VMNGCCModel.m in Sources */,
 				BE3B5F6C1937B1DF00930E49 /* VMNGCCFacade.m in Sources */,
