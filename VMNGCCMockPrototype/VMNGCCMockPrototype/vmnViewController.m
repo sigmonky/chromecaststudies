@@ -7,17 +7,13 @@
 //
 
 #import "vmnViewController.h"
+
 static NSString * kReceiverAppID;
+VMNGCCMiniPlayerViewController *miniPlayerController;
+VMNGCCMediaPlayingViewController *mainPlayerController;
 
 
 @interface vmnViewController ()
-/*@property GCKMediaControlChannel *mediaControlChannel;
-@property GCKApplicationMetadata *applicationMetadata;
-@property GCKDevice *selectedDevice;
-@property(nonatomic, strong) GCKDeviceScanner *deviceScanner;
-@property(nonatomic, strong) GCKDeviceManager *deviceManager;
-@property(nonatomic, readonly) GCKMediaInformation *mediaInformation;
- */
 @end
 
 @implementation vmnViewController
@@ -26,13 +22,16 @@ static NSString * kReceiverAppID;
 {
     [super viewDidLoad];
 
-    kReceiverAppID=@"011C45D7";
+   
     [VMNGCCFacade sharedInstance].appID = @"011C45D7";
     [VMNGCCFacade sharedInstance].delegate = (id)self;
+    
+    self.videoMGID.text = @"mgid:uma:videolist:mtv.com:1726895";
     
     if ( [VMNGCCFacade sharedInstance].getVMNGCCPlayState == DEVICESUNDETECTED) {
         self.gccButton.hidden = TRUE;
         [self.gccButton setTintColor:[UIColor lightGrayColor]];
+        self.playVideoBtn.hidden = TRUE;
         [[VMNGCCFacade sharedInstance] scan];
     }
 
@@ -46,6 +45,7 @@ static NSString * kReceiverAppID;
     UIActionSheet *sheet;
     VMNGCCReadyViewController *controller;
     NSArray *availableDevices;
+    
     switch ( [[VMNGCCFacade sharedInstance] getVMNGCCPlayState] ) {
         case DEVICESELECTED:
             break;
@@ -72,21 +72,21 @@ static NSString * kReceiverAppID;
             
             break;
         case DEVICECONNECTED:
+        
             controller = [self.storyboard instantiateViewControllerWithIdentifier:@"deviceConnected"];
-             controller.delegate = self;
+            controller.delegate = self;
              
              [self presentViewController:controller animated:YES completion:NULL];
             controller.deviceNameLbl.text = [VMNGCCFacade sharedInstance].deviceName;
             
             break;
         case MEDIAPLAYING:
-            /*
+        
              controller = [self.storyboard instantiateViewControllerWithIdentifier:@"playOrDisconnect"];
              controller.delegate = self;
              
              [self presentViewController:controller animated:YES completion:NULL];
-             
-             */
+            
             break;
         default:
             break;
@@ -94,6 +94,39 @@ static NSString * kReceiverAppID;
             
     }
     
+    
+}
+
+- (IBAction)playVideoBtnClicked:(id)sender {
+    NSError *error;
+    NSString *jsonString;
+    
+    jsonString = [[VMNGCCMessage sharedInstance]VMNGCCLoadVideoMessage:self.videoMGID.text
+        TVEToken:@"tveToken"
+        TVEProviderMD5:@"TVEProviderMD5"
+        error:&error];
+    
+    BOOL success = [[VMNGCCFacade sharedInstance] sendMessage:jsonString];
+    
+    if (success) {
+        [self launchMainPlayer];
+        self.playVideoBtn.hidden = TRUE;
+    } else {
+        //TODO: handle playback init failure here
+    }
+
+}
+
+- (void) launchMainPlayer {
+    
+    mainPlayerController = [self.storyboard instantiateViewControllerWithIdentifier:@"mediaPlayingMain"];
+    mainPlayerController.delegate = (id)self;
+    mainPlayerController.deviceName = [NSString
+                             stringWithFormat:@"Now casting to %@",[VMNGCCFacade sharedInstance].deviceName];
+    
+    mainPlayerController.playStatus = @"loading....";
+    [self presentViewController:mainPlayerController animated:YES completion:NULL];
+   
     
 }
 
@@ -119,75 +152,45 @@ static NSString * kReceiverAppID;
     
 }
 
-
-
-/*
-#pragma mark - GCKDeviceScannerListener
-- (void)deviceDidComeOnline:(GCKDevice *)device {
-    NSLog(@"listening....");
-    NSLog(@"device count %d",self.deviceScanner.devices.count);
-}
-
-#pragma mark - GCKDeviceManagerDelegate
-
-- (void)deviceManagerDidConnect:(GCKDeviceManager *)deviceManager {
-    //[self logStatus:@"connected!!"];
-    //[self updateButtonStates];
-    [self.deviceManager launchApplication:kReceiverAppID];
-}
-
-- (void)deviceManager:(GCKDeviceManager *)deviceManager
-didConnectToCastApplication:(GCKApplicationMetadata *)applicationMetadata
-            sessionID:(NSString *)sessionID
-  launchedApplication:(BOOL)launchedApplication {
-    
-    //[self logStatus:@"application has launched"];
-    //[self initializeCustomChannel];
-}
-
-- (void)deviceManager:(GCKDeviceManager *)deviceManager
-didFailToConnectToApplicationWithError:(NSError *)error {
-    //[self showError:error];
-    
-    //[self deviceDisconnected];
-    //[self updateButtonStates];
-}
-
-- (void)deviceManager:(GCKDeviceManager *)deviceManager
-didFailToConnectWithError:(GCKError *)error {
-    //[self showError:error];
-    
-    //[self deviceDisconnected];
-    //[self updateButtonStates];
-}
-
-- (void)deviceManager:(GCKDeviceManager *)deviceManager didDisconnectWithError:(GCKError *)error {
-    NSLog(@"Received notification that device disconnected");
-    
-    if (error != nil) {
-        //[self showError:error];
+- (void) deviceDisonnect {
+    if (miniPlayerController.isViewLoaded ) {
+        [miniPlayerController willMoveToParentViewController:nil];
+        [miniPlayerController.view removeFromSuperview];
+        [miniPlayerController removeFromParentViewController];
+        
     }
     
-    //[self deviceDisconnected];
-    //[self updateButtonStates];
+    [[VMNGCCFacade sharedInstance] disconnect];
+
+}
+
+
+#pragma mark VMNGCCMediaPlayingController delegate methods
+- (void) closePlayingMainView {
+    NSLog(@"closed main player view");
     
+     miniPlayerController = [self.storyboard instantiateViewControllerWithIdentifier:@"mediaPlayingMin"];
+     
+     miniPlayerController.delegate = (id)self;
+     
+     [self addChildViewController: miniPlayerController];
+     miniPlayerController.view.frame = CGRectMake(0, 380, 320, 100);
+     [self.view addSubview: miniPlayerController.view];
+     [miniPlayerController didMoveToParentViewController:self];
+
 }
 
-- (void)deviceManager:(GCKDeviceManager *)deviceManager
-didReceiveStatusForApplication:(GCKApplicationMetadata *)applicationMetadata {
-    self.applicationMetadata = applicationMetadata;
+#pragma mark VMNGCCMiniPlayerViewController delegate methods
+- (void) closePlayingMiniView:(UIViewController *)childController {
+    
+    [childController willMoveToParentViewController:nil];
+    [childController.view removeFromSuperview];
+    [childController removeFromParentViewController];
+    [self launchMainPlayer];
 }
 
-#pragma mark - misc
-- (void)showError:(NSError *)error {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", nil)
-                                                    message:NSLocalizedString(error.description, nil)
-                                                   delegate:nil
-                                          cancelButtonTitle:NSLocalizedString(@"OK", nil)
-                                          otherButtonTitles:nil];
-    [alert show];
-}
- */
+
+
 
 #pragma mark VMNGCCFacade Delegate Methods -- Scanning
 - (void) devicesDetected:(NSInteger)numDevices {
@@ -202,6 +205,8 @@ didReceiveStatusForApplication:(GCKApplicationMetadata *)applicationMetadata {
     
     [self.gccButton.imageView stopAnimating];
     [self.gccButton setTintColor:[UIColor blueColor]];
+    self.playVideoBtn.hidden = FALSE;
+   
     
 }
 
@@ -209,6 +214,52 @@ didReceiveStatusForApplication:(GCKApplicationMetadata *)applicationMetadata {
     [self.gccButton setTintColor:[UIColor lightGrayColor]];
 }
 
+
+- (void) GCCAppMsgReceived:(NSDictionary *)msgDictionary {
+    NSLog(@"GCCAppMsgReceived %@",msgDictionary);
+    NSString *type = [msgDictionary objectForKey:VMNGCCMsgKeyType];
+    
+    NSLog(@"message type %@",type);
+    
+    if ( [type isEqual:VMNGCCMsgVideoLoaded]) {
+       [mainPlayerController setMediaPlayStatus:@"loaded....."];
+        
+        NSDictionary *message = [msgDictionary objectForKey:@"message"];
+        
+        int duration = [[message objectForKey:@"duration"] intValue];
+        int minutes = (int)floor((double)duration/60);
+        int seconds = duration % 60;
+        
+        mainPlayerController.durationLabel.text = [NSString stringWithFormat:@"%@:%@",
+                                                   [self timeFormatter:minutes],
+                                                   [self timeFormatter:seconds]];
+    } else if ([type isEqual:VMNGCCMsgVideoPlaying]) {
+        [mainPlayerController setMediaPlayStatus:@"playing....."];
+        
+        NSString *playheadStr = [msgDictionary objectForKey:@"message"];
+        
+        int playheadPosition = (int)ceil([playheadStr floatValue]);
+        int minutes = (int)floor((double)playheadPosition/60);
+        int seconds = playheadPosition % 60;
+        
+        mainPlayerController.playheadLabel.text = [NSString stringWithFormat:@"%@:%@",
+                                                    [self timeFormatter:minutes],
+                                                    [self timeFormatter:seconds]];
+        
+    }
+    
+    
+}
+
+- (NSString *) timeFormatter:(int)timeValue {
+    NSString *formattedValue;
+    if ( timeValue < 10) {
+        formattedValue = [NSString stringWithFormat:@"0%d",timeValue];
+    } else {
+        formattedValue = [NSString stringWithFormat:@"%d",timeValue];
+    }
+    return formattedValue;
+}
 
 #pragma mark application delegate methods
 
@@ -221,7 +272,13 @@ didReceiveStatusForApplication:(GCKApplicationMetadata *)applicationMetadata {
 #pragma mark VMNGCCReadyViewController Delegates
 - (void) disconnectDevice {
     
-    [[VMNGCCFacade sharedInstance] disconnect];
+    [self deviceDisonnect];
+}
+
+#pragma mark VMNGCCPlayingDisconnectVC Delegates 
+
+- (void) disconnectDeviceWhilePlaying {
+    [self deviceDisonnect];
 }
 
 

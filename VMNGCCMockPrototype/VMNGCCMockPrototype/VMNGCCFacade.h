@@ -8,13 +8,18 @@
 
 #import <Foundation/Foundation.h>
 #import <GoogleCast/GoogleCast.h>
+#import "VMNGCCMessage.h"
+#import "VMNGCCcustomChannel.h"
+
 
 
 @protocol VMNGCCFacade <NSObject>
 
+
 - (void) devicesDetected:(NSInteger)numDevices;
 - (void) deviceConnected;
 - (void) deviceDisconnected:(NSError *)error;
+- (void) GCCAppMsgReceived:(NSDictionary *)msgDictionary;
 @end
 
 
@@ -38,7 +43,8 @@ typedef enum {
     GCKDeviceManagerDelegate,
     GCKMediaControlChannelDelegate,
     UIActionSheetDelegate,
-    GCKCastChannelHandler
+    GCKCastChannelHandler,
+    VMNGCCcustomChannelDelegate
 >
     + (VMNGCCFacade *)sharedInstance;
     @property (nonatomic,assign) VMNGCCPlayStates playState;
@@ -46,6 +52,8 @@ typedef enum {
     @property GCKMediaControlChannel *mediaControlChannel;
     @property GCKApplicationMetadata *applicationMetadata;
     @property GCKDevice *selectedDevice;
+    @property (strong, nonatomic) VMNGCCcustomChannel *customChannel;
+
 
     @property(nonatomic,assign) VMNGCCPlayStates currentPlayState;
     @property(nonatomic, strong) GCKDeviceScanner *deviceScanner;
@@ -61,5 +69,6 @@ typedef enum {
 - (void)connect:(NSInteger)deviceIndex;
 - (void)disconnect;
 - (VMNGCCPlayStates) getVMNGCCPlayState;
+- (BOOL) sendMessage:(NSString *)theMessage;
 
 @end

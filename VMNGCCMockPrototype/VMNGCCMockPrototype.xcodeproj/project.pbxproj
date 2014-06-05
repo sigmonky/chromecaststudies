@@ -69,7 +69,12 @@
 		BE4DA0A5193D09D900D11E55 /* video_thumb_mini.png in Resources */ = {isa = PBXBuildFile; fileRef = BE4DA078193D09D900D11E55 /* video_thumb_mini.png */; };
 		BE4DA0A6193D09D900D11E55 /* video_thumb_mini@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BE4DA079193D09D900D11E55 /* video_thumb_mini@2x.png */; };
 		BE4DA0A9193D22CC00D11E55 /* VMNGCCModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE4DA0A8193D22CC00D11E55 /* VMNGCCModel.m */; };
+		BE9DEEA7193F860E006C0413 /* VMNGCCcustomChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE9DEEA6193F860E006C0413 /* VMNGCCcustomChannel.m */; };
+		BE9DEEAA193F861B006C0413 /* VMNGCCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = BE9DEEA9193F861B006C0413 /* VMNGCCMessage.m */; };
+		BE9DEEB5193FB948006C0413 /* VMNGCCMediaPlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE9DEEB4193FB948006C0413 /* VMNGCCMediaPlayingViewController.m */; };
 		BEA077A9193E5ADE003DCB00 /* VMNGCCReadyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BEA077A8193E5ADE003DCB00 /* VMNGCCReadyViewController.m */; };
+		BEFB5A341940D55700BF0875 /* VMNGCCMiniPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BEFB5A331940D55700BF0875 /* VMNGCCMiniPlayerViewController.m */; };
+		BEFB5A371941198300BF0875 /* VMNGCCPlayingDisconnectVC.m in Sources */ = {isa = PBXBuildFile; fileRef = BEFB5A361941198300BF0875 /* VMNGCCPlayingDisconnectVC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -152,8 +157,18 @@
 		BE4DA079193D09D900D11E55 /* video_thumb_mini@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video_thumb_mini@2x.png"; sourceTree = "<group>"; };
 		BE4DA0A7193D22CC00D11E55 /* VMNGCCModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMNGCCModel.h; sourceTree = "<group>"; };
 		BE4DA0A8193D22CC00D11E55 /* VMNGCCModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMNGCCModel.m; sourceTree = "<group>"; };
+		BE9DEEA5193F860E006C0413 /* VMNGCCcustomChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMNGCCcustomChannel.h; sourceTree = "<group>"; };
+		BE9DEEA6193F860E006C0413 /* VMNGCCcustomChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMNGCCcustomChannel.m; sourceTree = "<group>"; };
+		BE9DEEA8193F861B006C0413 /* VMNGCCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMNGCCMessage.h; sourceTree = "<group>"; };
+		BE9DEEA9193F861B006C0413 /* VMNGCCMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMNGCCMessage.m; sourceTree = "<group>"; };
+		BE9DEEB3193FB948006C0413 /* VMNGCCMediaPlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMNGCCMediaPlayingViewController.h; sourceTree = "<group>"; };
+		BE9DEEB4193FB948006C0413 /* VMNGCCMediaPlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMNGCCMediaPlayingViewController.m; sourceTree = "<group>"; };
 		BEA077A7193E5ADE003DCB00 /* VMNGCCReadyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMNGCCReadyViewController.h; sourceTree = "<group>"; };
 		BEA077A8193E5ADE003DCB00 /* VMNGCCReadyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMNGCCReadyViewController.m; sourceTree = "<group>"; };
+		BEFB5A321940D55700BF0875 /* VMNGCCMiniPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMNGCCMiniPlayerViewController.h; path = ../VMNGCCMiniPlayerViewController.h; sourceTree = "<group>"; };
+		BEFB5A331940D55700BF0875 /* VMNGCCMiniPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMNGCCMiniPlayerViewController.m; path = ../VMNGCCMiniPlayerViewController.m; sourceTree = "<group>"; };
+		BEFB5A351941198300BF0875 /* VMNGCCPlayingDisconnectVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMNGCCPlayingDisconnectVC.h; path = ../VMNGCCPlayingDisconnectVC.h; sourceTree = "<group>"; };
+		BEFB5A361941198300BF0875 /* VMNGCCPlayingDisconnectVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMNGCCPlayingDisconnectVC.m; path = ../VMNGCCPlayingDisconnectVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -216,18 +231,8 @@
 		BE3B5F32193790A400930E49 /* VMNGCCMockPrototype */ = {
 			isa = PBXGroup;
 			children = (
-				BEA077A7193E5ADE003DCB00 /* VMNGCCReadyViewController.h */,
-				BEA077A8193E5ADE003DCB00 /* VMNGCCReadyViewController.m */,
-				BE4DA0AA193D22D900D11E55 /* Model */,
-				BE3B5F3B193790A400930E49 /* vmnAppDelegate.h */,
-				BE3B5F3C193790A400930E49 /* vmnAppDelegate.m */,
-				BE3B5F3E193790A400930E49 /* Main.storyboard */,
-				BE3B5F41193790A400930E49 /* vmnViewController.h */,
-				BE3B5F42193790A400930E49 /* vmnViewController.m */,
-				BE3B5F44193790A400930E49 /* Images.xcassets */,
+				BE9DEEAB193F8648006C0413 /* VMNGCC Library */,
 				BE3B5F33193790A400930E49 /* Supporting Files */,
-				BE3B5F6A1937B1DF00930E49 /* VMNGCCFacade.h */,
-				BE3B5F6B1937B1DF00930E49 /* VMNGCCFacade.m */,
 			);
 			path = VMNGCCMockPrototype;
 			sourceTree = "<group>";
@@ -320,6 +325,50 @@
 				BE4DA0A8193D22CC00D11E55 /* VMNGCCModel.m */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		BE9DEEAB193F8648006C0413 /* VMNGCC Library */ = {
+			isa = PBXGroup;
+			children = (
+				BE3B5F6A1937B1DF00930E49 /* VMNGCCFacade.h */,
+				BE3B5F6B1937B1DF00930E49 /* VMNGCCFacade.m */,
+				BE9DEEA8193F861B006C0413 /* VMNGCCMessage.h */,
+				BE9DEEA9193F861B006C0413 /* VMNGCCMessage.m */,
+				BE9DEEA5193F860E006C0413 /* VMNGCCcustomChannel.h */,
+				BE9DEEA6193F860E006C0413 /* VMNGCCcustomChannel.m */,
+				BE9DEEAC193F8675006C0413 /* client app */,
+				BE4DA0AA193D22D900D11E55 /* Model */,
+			);
+			name = "VMNGCC Library";
+			sourceTree = "<group>";
+		};
+		BE9DEEAC193F8675006C0413 /* client app */ = {
+			isa = PBXGroup;
+			children = (
+				BEFB5A3919411F2700BF0875 /* Child Views */,
+				BE3B5F3B193790A400930E49 /* vmnAppDelegate.h */,
+				BE3B5F3C193790A400930E49 /* vmnAppDelegate.m */,
+				BE3B5F3E193790A400930E49 /* Main.storyboard */,
+				BE3B5F41193790A400930E49 /* vmnViewController.h */,
+				BE3B5F42193790A400930E49 /* vmnViewController.m */,
+				BE3B5F44193790A400930E49 /* Images.xcassets */,
+			);
+			name = "client app";
+			sourceTree = "<group>";
+		};
+		BEFB5A3919411F2700BF0875 /* Child Views */ = {
+			isa = PBXGroup;
+			children = (
+				BEFB5A351941198300BF0875 /* VMNGCCPlayingDisconnectVC.h */,
+				BEFB5A361941198300BF0875 /* VMNGCCPlayingDisconnectVC.m */,
+				BEFB5A321940D55700BF0875 /* VMNGCCMiniPlayerViewController.h */,
+				BEFB5A331940D55700BF0875 /* VMNGCCMiniPlayerViewController.m */,
+				BEA077A7193E5ADE003DCB00 /* VMNGCCReadyViewController.h */,
+				BEA077A8193E5ADE003DCB00 /* VMNGCCReadyViewController.m */,
+				BE9DEEB3193FB948006C0413 /* VMNGCCMediaPlayingViewController.h */,
+				BE9DEEB4193FB948006C0413 /* VMNGCCMediaPlayingViewController.m */,
+			);
+			name = "Child Views";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -469,7 +518,12 @@
 				BE3B5F43193790A400930E49 /* vmnViewController.m in Sources */,
 				BEA077A9193E5ADE003DCB00 /* VMNGCCReadyViewController.m in Sources */,
 				BE3B5F39193790A400930E49 /* main.m in Sources */,
+				BEFB5A371941198300BF0875 /* VMNGCCPlayingDisconnectVC.m in Sources */,
 				BE4DA0A9193D22CC00D11E55 /* VMNGCCModel.m in Sources */,
+				BE9DEEAA193F861B006C0413 /* VMNGCCMessage.m in Sources */,
+				BE9DEEB5193FB948006C0413 /* VMNGCCMediaPlayingViewController.m in Sources */,
+				BE9DEEA7193F860E006C0413 /* VMNGCCcustomChannel.m in Sources */,
+				BEFB5A341940D55700BF0875 /* VMNGCCMiniPlayerViewController.m in Sources */,
 				BE3B5F6C1937B1DF00930E49 /* VMNGCCFacade.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -74,7 +74,7 @@ NSInteger _deviceIndex = -1;
     _mockLatency = [NSTimer
                     scheduledTimerWithTimeInterval:1.0
                     target:self
-                    selector:@selector(stopConnectionAnimation)
+                    selector:@selector(mockConnection)
                     userInfo:nil
                     repeats:NO];
     
@@ -90,14 +90,6 @@ NSInteger _deviceIndex = -1;
     
 }
 
-- (void) stopConnectionAnimation {
-    
-    [_mockLatency invalidate];
-    self.playState = DEVICECONNECTED;
-    self.deviceName = @"Mock Device";
-    [self.delegate deviceConnected];
-    
-}
 
 
 - (void) disconnect {
@@ -109,6 +101,24 @@ NSInteger _deviceIndex = -1;
 #endif
 }
 
+- (BOOL) sendMessage:(NSString *)theMessage {
+   
+    NSError *parsingError;
+    
+    NSDictionary *messageDict =
+    [NSJSONSerialization JSONObjectWithData: [theMessage dataUsingEncoding:NSUTF8StringEncoding]
+                                    options: NSJSONReadingMutableContainers
+                                      error: &parsingError];
+    
+    NSString *command = [messageDict objectForKey:@"command"];
+    
+    if ( [command isEqual: VMNGCCMsgLoadVideo]) {
+        self.playState = MEDIAPLAYING;
+    }
+    
+    return [self.customChannel sendTextMessage:theMessage];
+}
+
 
 
 
@@ -117,8 +127,7 @@ NSInteger _deviceIndex = -1;
 #pragma mark - GCKDeviceScannerListener
 - (void)deviceDidComeOnline:(GCKDevice *)device {
     NSLog(@"listening....");
-    NSLog(@"device count %d",self.deviceScanner.devices.count);
-    //[self connect];
+    NSLog(@"device count %lu",(unsigned long)self.deviceScanner.devices.count);
     self.playState = DEVICESDETECTED;
     [self.delegate devicesDetected:self.deviceScanner.devices.count];
 }
@@ -139,6 +148,7 @@ didConnectToCastApplication:(GCKApplicationMetadata *)applicationMetadata
     
     GCKDevice *device = self.deviceScanner.devices[_deviceIndex];
     self.deviceName = device.friendlyName;
+    [self initializeCustomChannel];
 
     [self.delegate deviceConnected];
 }
@@ -182,6 +192,53 @@ didReceiveStatusForApplication:(GCKApplicationMetadata *)applicationMetadata {
 - (VMNGCCPlayStates) getVMNGCCPlayState {
     return self.playState;
 }
+
+
+
+#pragma mark custom channel methods
+- (void) initializeCustomChannel {
+    self.customChannel = [[VMNGCCcustomChannel alloc]
+                          initWithNamespace:@"urn:x-cast:com.google.cast.sample.helloworld"
+                          ];
+    self.customChannel.delegate = (id) self;
+    [self.deviceManager addChannel:self.customChannel];
+    
+}
+
+#pragma mark - custom channel delegate
+- (void)customChannelMessageReceived:(NSString *)messageText {
+    
+    NSLog(@"received message: %@",messageText);
+    NSError *parsingError;
+    NSDictionary *messageDict =
+    [NSJSONSerialization JSONObjectWithData: [messageText dataUsingEncoding:NSUTF8StringEncoding]
+                                    options: NSJSONReadingMutableContainers
+                                      error: &parsingError];
+    
+    NSString *type = [messageDict objectForKey:VMNGCCMsgKeyType];
+    
+    NSLog(@"message type %@",type);
+    
+    if ( [type isEqual:VMNGCCMsgVideoLoaded]) {
+        self.playState = MEDIAPLAYING;
+    }
+    
+   
+    [self.delegate GCCAppMsgReceived:messageDict];
+}
+
+
+#pragma mark mock behavior methods
+- (void) mockConnection {
+    
+    [_mockLatency invalidate];
+    self.playState = DEVICECONNECTED;
+    self.deviceName = @"Mock Device";
+    [self.delegate deviceConnected];
+    
+}
+
+
 
 
 @end
