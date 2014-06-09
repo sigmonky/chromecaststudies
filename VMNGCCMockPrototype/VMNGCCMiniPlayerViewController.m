@@ -27,7 +27,29 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    int playState = [self.delegate getMiniPlayState];
+
+    if ( playState == MEDIAPLAYING ) {
+        [self.playPauseBtn
+         setImage:[UIImage imageNamed:@"pause_black.png"]
+         forState:UIControlStateNormal
+         ];
+        
+    } else if (playState == MEDIAPAUSED) {
+        [self.playPauseBtn
+         setImage:[UIImage imageNamed:@"play_black.png"]
+         forState:UIControlStateNormal
+         ];
+        
+    }
+    
+    self.castingMsgLbl.text = self.deviceName;
+    self.videoTitleLbl.text = self.videoTitle;
+
 }
+
+
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -48,5 +70,24 @@
 
 - (IBAction)restoreMainPlayer:(id)sender {
     [[self delegate] closePlayingMiniView:self];
+}
+- (IBAction)playPause:(id)sender {
+    int playState = [self.delegate getMiniPlayState];
+    
+    
+    if ( playState == MEDIAPLAYING ) {
+        [self.playPauseBtn
+         setImage:[UIImage imageNamed:@"play_black.png"]
+         forState:UIControlStateNormal
+         ];
+        [self.delegate pauseMiniPlayback];
+    } else if (playState == MEDIAPAUSED) {
+        [self.playPauseBtn
+         setImage:[UIImage imageNamed:@"pause_black.png"]
+         forState:UIControlStateNormal
+         ];
+        [self.delegate resumeMiniPlayback];
+        
+    }
 }
 @end

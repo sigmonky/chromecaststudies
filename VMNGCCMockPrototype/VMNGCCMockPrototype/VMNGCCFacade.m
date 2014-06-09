@@ -113,8 +113,14 @@ NSInteger _deviceIndex = -1;
     NSString *command = [messageDict objectForKey:@"command"];
     
     if ( [command isEqual: VMNGCCMsgLoadVideo]) {
-        self.playState = MEDIAPLAYING;
+        self.playState = MEDIALOADING;
     }
+    
+    if ([command isEqual:VMNGCCMsgPause] ) {
+        self.playState = MEDIAPAUSED;
+    }
+    
+    NSLog(@"sending %@",theMessage);
     
     return [self.customChannel sendTextMessage:theMessage];
 }
@@ -189,7 +195,7 @@ didReceiveStatusForApplication:(GCKApplicationMetadata *)applicationMetadata {
 }
 
 #pragma mark playState getter
-- (VMNGCCPlayStates) getVMNGCCPlayState {
+- (VMNGCCPlayState) getVMNGCCPlayState {
     return self.playState;
 }
 
@@ -220,7 +226,11 @@ didReceiveStatusForApplication:(GCKApplicationMetadata *)applicationMetadata {
     NSLog(@"message type %@",type);
     
     if ( [type isEqual:VMNGCCMsgVideoLoaded]) {
-        self.playState = MEDIAPLAYING;
+        self.playState = MEDIALOADED;
+    }
+    
+    if ( [type isEqual:VMNGCCMsgVideoPlaying]) {
+       self.playState = MEDIAPLAYING;
     }
     
    

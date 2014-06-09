@@ -7,24 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <GoogleCast/GoogleCast.h>
+//#import <GoogleCast/GoogleCast.h>
 #import "VMNGCCFacade.h"
 #import "VMNGCCReadyViewController.h"
 #import "VMNGCCPlayingDisconnectVC.h"
 #import "VMNGCCMediaPlayingViewController.h"
 #import "VMNGCCMiniPlayerViewController.h"
 
+
 @interface vmnViewController : UIViewController
 <
-GCKDeviceScannerListener,
-GCKDeviceManagerDelegate,
-GCKMediaControlChannelDelegate,
 UIActionSheetDelegate,
-GCKCastChannelHandler,
 VMNGCCFacade,
 VMNGCCReadyView,
 VMNGCCPlayDisconnectView,
-VMNGCCMediaPlayingView
+VMNGCCMediaPlayingView,
+VMNGCCMiniPlayerView
 
 >
 @property (weak, nonatomic) IBOutlet UIButton *gccButton;

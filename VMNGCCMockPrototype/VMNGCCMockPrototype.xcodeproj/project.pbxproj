@@ -68,7 +68,7 @@
 		BE4DA0A4193D09D900D11E55 /* prev_black@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BE4DA077193D09D900D11E55 /* prev_black@2x.png */; };
 		BE4DA0A5193D09D900D11E55 /* video_thumb_mini.png in Resources */ = {isa = PBXBuildFile; fileRef = BE4DA078193D09D900D11E55 /* video_thumb_mini.png */; };
 		BE4DA0A6193D09D900D11E55 /* video_thumb_mini@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BE4DA079193D09D900D11E55 /* video_thumb_mini@2x.png */; };
-		BE4DA0A9193D22CC00D11E55 /* VMNGCCModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE4DA0A8193D22CC00D11E55 /* VMNGCCModel.m */; };
+		BE7B59D819461B3B0017E34D /* VMNGCCPlayStates.m in Sources */ = {isa = PBXBuildFile; fileRef = BE7B59D719461B3B0017E34D /* VMNGCCPlayStates.m */; };
 		BE9DEEA7193F860E006C0413 /* VMNGCCcustomChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE9DEEA6193F860E006C0413 /* VMNGCCcustomChannel.m */; };
 		BE9DEEAA193F861B006C0413 /* VMNGCCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = BE9DEEA9193F861B006C0413 /* VMNGCCMessage.m */; };
 		BE9DEEB5193FB948006C0413 /* VMNGCCMediaPlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE9DEEB4193FB948006C0413 /* VMNGCCMediaPlayingViewController.m */; };
@@ -155,8 +155,8 @@
 		BE4DA077193D09D900D11E55 /* prev_black@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "prev_black@2x.png"; sourceTree = "<group>"; };
 		BE4DA078193D09D900D11E55 /* video_thumb_mini.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = video_thumb_mini.png; sourceTree = "<group>"; };
 		BE4DA079193D09D900D11E55 /* video_thumb_mini@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video_thumb_mini@2x.png"; sourceTree = "<group>"; };
-		BE4DA0A7193D22CC00D11E55 /* VMNGCCModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMNGCCModel.h; sourceTree = "<group>"; };
-		BE4DA0A8193D22CC00D11E55 /* VMNGCCModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMNGCCModel.m; sourceTree = "<group>"; };
+		BE7B59D619461B3B0017E34D /* VMNGCCPlayStates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMNGCCPlayStates.h; sourceTree = "<group>"; };
+		BE7B59D719461B3B0017E34D /* VMNGCCPlayStates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMNGCCPlayStates.m; sourceTree = "<group>"; };
 		BE9DEEA5193F860E006C0413 /* VMNGCCcustomChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMNGCCcustomChannel.h; sourceTree = "<group>"; };
 		BE9DEEA6193F860E006C0413 /* VMNGCCcustomChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMNGCCcustomChannel.m; sourceTree = "<group>"; };
 		BE9DEEA8193F861B006C0413 /* VMNGCCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMNGCCMessage.h; sourceTree = "<group>"; };
@@ -199,7 +199,6 @@
 		BE3B5F20193790A400930E49 = {
 			isa = PBXGroup;
 			children = (
-				BE4DA04C193D09BE00D11E55 /* media assets */,
 				BE3B5F32193790A400930E49 /* VMNGCCMockPrototype */,
 				BE3B5F51193790A400930E49 /* VMNGCCMockPrototypeTests */,
 				BE3B5F2B193790A400930E49 /* Frameworks */,
@@ -232,6 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				BE9DEEAB193F8648006C0413 /* VMNGCC Library */,
+				BE9DEEAC193F8675006C0413 /* client app */,
 				BE3B5F33193790A400930E49 /* Supporting Files */,
 			);
 			path = VMNGCCMockPrototype;
@@ -316,15 +316,7 @@
 				BE4DA079193D09D900D11E55 /* video_thumb_mini@2x.png */,
 			);
 			name = "media assets";
-			sourceTree = "<group>";
-		};
-		BE4DA0AA193D22D900D11E55 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				BE4DA0A7193D22CC00D11E55 /* VMNGCCModel.h */,
-				BE4DA0A8193D22CC00D11E55 /* VMNGCCModel.m */,
-			);
-			name = Model;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		BE9DEEAB193F8648006C0413 /* VMNGCC Library */ = {
@@ -336,8 +328,8 @@
 				BE9DEEA9193F861B006C0413 /* VMNGCCMessage.m */,
 				BE9DEEA5193F860E006C0413 /* VMNGCCcustomChannel.h */,
 				BE9DEEA6193F860E006C0413 /* VMNGCCcustomChannel.m */,
-				BE9DEEAC193F8675006C0413 /* client app */,
-				BE4DA0AA193D22D900D11E55 /* Model */,
+				BE7B59D619461B3B0017E34D /* VMNGCCPlayStates.h */,
+				BE7B59D719461B3B0017E34D /* VMNGCCPlayStates.m */,
 			);
 			name = "VMNGCC Library";
 			sourceTree = "<group>";
@@ -345,6 +337,7 @@
 		BE9DEEAC193F8675006C0413 /* client app */ = {
 			isa = PBXGroup;
 			children = (
+				BE4DA04C193D09BE00D11E55 /* media assets */,
 				BEFB5A3919411F2700BF0875 /* Child Views */,
 				BE3B5F3B193790A400930E49 /* vmnAppDelegate.h */,
 				BE3B5F3C193790A400930E49 /* vmnAppDelegate.m */,
@@ -515,11 +508,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				BE3B5F3D193790A400930E49 /* vmnAppDelegate.m in Sources */,
+				BE7B59D819461B3B0017E34D /* VMNGCCPlayStates.m in Sources */,
 				BE3B5F43193790A400930E49 /* vmnViewController.m in Sources */,
 				BEA077A9193E5ADE003DCB00 /* VMNGCCReadyViewController.m in Sources */,
 				BE3B5F39193790A400930E49 /* main.m in Sources */,
 				BEFB5A371941198300BF0875 /* VMNGCCPlayingDisconnectVC.m in Sources */,
-				BE4DA0A9193D22CC00D11E55 /* VMNGCCModel.m in Sources */,
 				BE9DEEAA193F861B006C0413 /* VMNGCCMessage.m in Sources */,
 				BE9DEEB5193FB948006C0413 /* VMNGCCMediaPlayingViewController.m in Sources */,
 				BE9DEEA7193F860E006C0413 /* VMNGCCcustomChannel.m in Sources */,

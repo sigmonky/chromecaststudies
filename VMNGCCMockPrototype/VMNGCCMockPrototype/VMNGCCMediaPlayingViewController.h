@@ -7,15 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VMNGCCPlayStates.h"
 
 @protocol VMNGCCMediaPlayingView <NSObject>
 
 - (void) closePlayingMainView;
+- (int) getPlayState;
+- (void) pausePlayback;
+- (void) resumePlayback;
 
 @end
 
 @interface VMNGCCMediaPlayingViewController : UIViewController
-    @property (nonatomic, weak) id<VMNGCCMediaPlayingView> delegate;
+
+@property (nonatomic, weak) id<VMNGCCMediaPlayingView> delegate;
 
 - (IBAction)closeView:(id)sender;
 - (IBAction)rewind:(id)sender;

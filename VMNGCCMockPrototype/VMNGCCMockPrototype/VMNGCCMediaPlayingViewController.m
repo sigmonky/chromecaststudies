@@ -8,6 +8,7 @@
 
 #import "VMNGCCMediaPlayingViewController.h"
 
+
 @interface VMNGCCMediaPlayingViewController ()
 
 @end
@@ -69,6 +70,24 @@
 }
 
 - (IBAction)playPause:(id)sender {
+    
+    int playState = [self.delegate getPlayState];
+    
+    
+    if ( playState == MEDIAPLAYING ) {
+        [self.playPauseBtn
+         setImage:[UIImage imageNamed:@"play_black.png"]
+         forState:UIControlStateNormal
+         ];
+        [self.delegate pausePlayback];
+    } else if (playState == MEDIAPAUSED) {
+        [self.playPauseBtn
+         setImage:[UIImage imageNamed:@"pause_black.png"]
+         forState:UIControlStateNormal
+         ];
+        [self.delegate resumePlayback];
+        
+    }
 }
 
 - (IBAction)fastForward:(id)sender {

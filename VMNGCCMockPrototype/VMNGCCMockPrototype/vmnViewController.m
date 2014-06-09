@@ -39,7 +39,45 @@ VMNGCCMediaPlayingViewController *mainPlayerController;
 }
 
 
-#pragma mark client app methods
+#pragma mark client app methods -- Device Connection Management
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSLog(@"button clicked = %d",buttonIndex);
+    if (buttonIndex == actionSheet.cancelButtonIndex) {
+        NSLog(@"connection cancelled...");
+    } else {
+        [[VMNGCCFacade sharedInstance] connect:buttonIndex];
+        [self deviceConnectionAnimation];
+        
+    }
+    
+}
+
+- (void) deviceConnectionAnimation {
+    
+    self.gccButton.imageView.animationImages =
+    @[ [UIImage imageNamed:@"icon_cast_on0.png"], [UIImage imageNamed:@"icon_cast_on1.png"],
+       [UIImage imageNamed:@"icon_cast_on2.png"], [UIImage imageNamed:@"icon_cast_on1.png"] ];
+    self.gccButton.imageView.animationDuration = 1;
+    [self.gccButton.imageView startAnimating];
+    
+}
+
+- (void) deviceDisonnect {
+    if (miniPlayerController.isViewLoaded ) {
+        [miniPlayerController willMoveToParentViewController:nil];
+        [miniPlayerController.view removeFromSuperview];
+        [miniPlayerController removeFromParentViewController];
+        
+    }
+    
+    [[VMNGCCFacade sharedInstance] disconnect];
+    
+}
+
+
+
+
+#pragma mark client app methods -- Chromecast State Management
 - (IBAction)gccButtonClicked:(id)sender {
     
     UIActionSheet *sheet;
@@ -87,6 +125,8 @@ VMNGCCMediaPlayingViewController *mainPlayerController;
              
              [self presentViewController:controller animated:YES completion:NULL];
             
+            controller.deviceNameLbl.text = [VMNGCCFacade sharedInstance].deviceName;
+            
             break;
         default:
             break;
@@ -97,6 +137,8 @@ VMNGCCMediaPlayingViewController *mainPlayerController;
     
 }
 
+
+#pragma mark client app methods -- Playback Management
 - (IBAction)playVideoBtnClicked:(id)sender {
     NSError *error;
     NSString *jsonString;
@@ -126,43 +168,10 @@ VMNGCCMediaPlayingViewController *mainPlayerController;
     
     mainPlayerController.playStatus = @"loading....";
     [self presentViewController:mainPlayerController animated:YES completion:NULL];
-   
+       
     
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSLog(@"button clicked = %d",buttonIndex);
-    if (buttonIndex == actionSheet.cancelButtonIndex) {
-        NSLog(@"connection cancelled...");
-    } else {
-        [[VMNGCCFacade sharedInstance] connect:buttonIndex];
-        [self deviceConnectionAnimation];
-        
-    }
-    
-}
-
-- (void) deviceConnectionAnimation {
-    
-    self.gccButton.imageView.animationImages =
-    @[ [UIImage imageNamed:@"icon_cast_on0.png"], [UIImage imageNamed:@"icon_cast_on1.png"],
-       [UIImage imageNamed:@"icon_cast_on2.png"], [UIImage imageNamed:@"icon_cast_on1.png"] ];
-    self.gccButton.imageView.animationDuration = 1;
-    [self.gccButton.imageView startAnimating];
-    
-}
-
-- (void) deviceDisonnect {
-    if (miniPlayerController.isViewLoaded ) {
-        [miniPlayerController willMoveToParentViewController:nil];
-        [miniPlayerController.view removeFromSuperview];
-        [miniPlayerController removeFromParentViewController];
-        
-    }
-    
-    [[VMNGCCFacade sharedInstance] disconnect];
-
-}
 
 
 #pragma mark VMNGCCMediaPlayingController delegate methods
@@ -172,13 +181,52 @@ VMNGCCMediaPlayingViewController *mainPlayerController;
      miniPlayerController = [self.storyboard instantiateViewControllerWithIdentifier:@"mediaPlayingMin"];
      
      miniPlayerController.delegate = (id)self;
-     
+    miniPlayerController.deviceName = [NSString
+                                       stringWithFormat:@"Now casting to %@",[VMNGCCFacade  sharedInstance].deviceName];
+    miniPlayerController.videoTitle = @"xxxxxxx";
+
+    
      [self addChildViewController: miniPlayerController];
      miniPlayerController.view.frame = CGRectMake(0, 380, 320, 100);
      [self.view addSubview: miniPlayerController.view];
      [miniPlayerController didMoveToParentViewController:self];
-
+    
 }
+
+- (int) getPlayState {
+    
+    return [[VMNGCCFacade sharedInstance] playState];
+}
+
+
+
+
+- (void) pausePlayback {
+    NSString *jsonString;
+    NSError *error;
+    
+    jsonString = [[VMNGCCMessage sharedInstance]VMNGCCPauseMessage:&error];
+    
+    BOOL success = [[VMNGCCFacade sharedInstance] sendMessage:jsonString];
+    
+    [[VMNGCCFacade sharedInstance] setPlayState:MEDIAPAUSED];
+    mainPlayerController.playStatus = @"paused....";
+    
+}
+
+- (void) resumePlayback {
+    
+    NSString *jsonString;
+    NSError *error;
+    
+    jsonString = [[VMNGCCMessage sharedInstance]VMNGCCResumeMessage:&error];
+    
+    BOOL success = [[VMNGCCFacade sharedInstance] sendMessage:jsonString];
+    
+    [[VMNGCCFacade sharedInstance] setPlayState:MEDIAPLAYING];
+     mainPlayerController.playStatus = @"playing....";
+}
+
 
 #pragma mark VMNGCCMiniPlayerViewController delegate methods
 - (void) closePlayingMiniView:(UIViewController *)childController {
@@ -188,6 +236,40 @@ VMNGCCMediaPlayingViewController *mainPlayerController;
     [childController removeFromParentViewController];
     [self launchMainPlayer];
 }
+
+- (void) pauseMiniPlayback {
+    NSString *jsonString;
+    NSError *error;
+    
+    jsonString = [[VMNGCCMessage sharedInstance]VMNGCCPauseMessage:&error];
+    
+    BOOL success = [[VMNGCCFacade sharedInstance] sendMessage:jsonString];
+    
+    [[VMNGCCFacade sharedInstance] setPlayState:MEDIAPAUSED];
+    mainPlayerController.playStatus = @"paused....";
+
+    
+}
+
+- (void) resumeMiniPlayback {
+    NSString *jsonString;
+    NSError *error;
+    
+    jsonString = [[VMNGCCMessage sharedInstance]VMNGCCResumeMessage:&error];
+    
+    BOOL success = [[VMNGCCFacade sharedInstance] sendMessage:jsonString];
+    
+    [[VMNGCCFacade sharedInstance] setPlayState:MEDIAPLAYING];
+    mainPlayerController.playStatus = @"playing....";
+
+    
+}
+
+- (int) getMiniPlayState {
+    
+    return [[VMNGCCFacade sharedInstance] playState];
+}
+
 
 
 
@@ -200,7 +282,7 @@ VMNGCCMediaPlayingViewController *mainPlayerController;
     }
 }
 
-
+#pragma mark VMNGCCFacade Delegate Methods -- Connectivity
 - (void) deviceConnected {
     
     [self.gccButton.imageView stopAnimating];
@@ -212,13 +294,15 @@ VMNGCCMediaPlayingViewController *mainPlayerController;
 
 - (void) deviceDisconnected:(NSError *)error {
     [self.gccButton setTintColor:[UIColor lightGrayColor]];
+    self.playVideoBtn.hidden = TRUE;
 }
 
+#pragma mark VMNGCCFacade Delegate Methods -- Messaging
 
 - (void) GCCAppMsgReceived:(NSDictionary *)msgDictionary {
     NSLog(@"GCCAppMsgReceived %@",msgDictionary);
     NSString *type = [msgDictionary objectForKey:VMNGCCMsgKeyType];
-    
+    static int duration;
     NSLog(@"message type %@",type);
     
     if ( [type isEqual:VMNGCCMsgVideoLoaded]) {
@@ -226,7 +310,7 @@ VMNGCCMediaPlayingViewController *mainPlayerController;
         
         NSDictionary *message = [msgDictionary objectForKey:@"message"];
         
-        int duration = [[message objectForKey:@"duration"] intValue];
+        duration = [[message objectForKey:@"duration"] intValue];
         int minutes = (int)floor((double)duration/60);
         int seconds = duration % 60;
         
@@ -246,6 +330,9 @@ VMNGCCMediaPlayingViewController *mainPlayerController;
                                                     [self timeFormatter:minutes],
                                                     [self timeFormatter:seconds]];
         
+        float pctPlayed = [playheadStr floatValue]/(float)duration;
+        mainPlayerController.playheadPosition.value = pctPlayed;
+        
     }
     
     
@@ -261,7 +348,7 @@ VMNGCCMediaPlayingViewController *mainPlayerController;
     return formattedValue;
 }
 
-#pragma mark application delegate methods
+#pragma mark standard application delegate methods
 
 - (void)didReceiveMemoryWarning
 {
@@ -279,6 +366,37 @@ VMNGCCMediaPlayingViewController *mainPlayerController;
 
 - (void) disconnectDeviceWhilePlaying {
     [self deviceDisonnect];
+}
+
+- (int) getPlayDisconnectPlayState {
+    
+    return [[VMNGCCFacade sharedInstance] playState];
+}
+
+- (void) pausePlayDisconnectPlayback {
+    
+    NSString *jsonString;
+    NSError *error;
+    
+    jsonString = [[VMNGCCMessage sharedInstance]VMNGCCPauseMessage:&error];
+    
+    BOOL success = [[VMNGCCFacade sharedInstance] sendMessage:jsonString];
+    
+    [[VMNGCCFacade sharedInstance] setPlayState:MEDIAPAUSED];
+    
+}
+
+- (void) resumePlayDisconnectPlayback {
+    
+    NSString *jsonString;
+    NSError *error;
+    
+    jsonString = [[VMNGCCMessage sharedInstance]VMNGCCResumeMessage:&error];
+    
+    BOOL success = [[VMNGCCFacade sharedInstance] sendMessage:jsonString];
+    
+    [[VMNGCCFacade sharedInstance] setPlayState:MEDIAPLAYING];
+    
 }
 
 

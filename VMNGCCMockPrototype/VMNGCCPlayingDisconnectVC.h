@@ -7,10 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VMNGCCPlayStates.h"
 
 @protocol VMNGCCPlayDisconnectView <NSObject>
 
 - (void) disconnectDeviceWhilePlaying;
+- (int) getPlayDisconnectPlayState;
+- (void) pausePlayDisconnectPlayback;
+- (void) resumePlayDisconnectPlayback;
+
 
 @end
 
@@ -19,8 +24,15 @@
 
 - (IBAction)disconnectDevice:(id)sender;
 
- @property (nonatomic, weak) id<VMNGCCPlayDisconnectView> delegate;
+@property (nonatomic, weak) id<VMNGCCPlayDisconnectView> delegate;
  
+@property (weak, nonatomic) IBOutlet UILabel *deviceNameLbl;
+@property (weak, nonatomic) IBOutlet UILabel *titleLbl;
 
+@property (strong,nonatomic) NSString *deviceName;
+@property (strong,nonatomic) NSString *videoTitle;
 
+@property (weak, nonatomic) IBOutlet UIButton *playPauseBtn;
+
+- (IBAction)playPause:(id)sender;
 @end

@@ -10,6 +10,7 @@
 #import <GoogleCast/GoogleCast.h>
 #import "VMNGCCMessage.h"
 #import "VMNGCCcustomChannel.h"
+#import "VMNGCCPlayStates.h"
 
 
 
@@ -23,17 +24,6 @@
 @end
 
 
-typedef enum {
-    DEVICESUNDETECTED,
-    DEVICESDETECTED,
-    DEVICESELECTED,
-    DEVICECONNECTED,
-    DEVICEDISCONNECTED,
-    MEDIAPAUSED,
-    MEDIAPLAYING,
-    MEDIABUFFERING,
-    MEDIASTOPPED
-} VMNGCCPlayStates;
 
 
 
@@ -43,11 +33,11 @@ typedef enum {
     GCKDeviceManagerDelegate,
     GCKMediaControlChannelDelegate,
     UIActionSheetDelegate,
-    GCKCastChannelHandler,
+    //GCKCastChannelHandler,
     VMNGCCcustomChannelDelegate
 >
     + (VMNGCCFacade *)sharedInstance;
-    @property (nonatomic,assign) VMNGCCPlayStates playState;
+    @property (nonatomic,assign) VMNGCCPlayState playState;
     @property id <VMNGCCFacade> delegate;
     @property GCKMediaControlChannel *mediaControlChannel;
     @property GCKApplicationMetadata *applicationMetadata;
@@ -55,7 +45,7 @@ typedef enum {
     @property (strong, nonatomic) VMNGCCcustomChannel *customChannel;
 
 
-    @property(nonatomic,assign) VMNGCCPlayStates currentPlayState;
+    @property(nonatomic,assign) VMNGCCPlayState currentPlayState;
     @property(nonatomic, strong) GCKDeviceScanner *deviceScanner;
     @property(nonatomic, strong) GCKDeviceManager *deviceManager;
     @property(nonatomic, readonly) GCKMediaInformation *mediaInformation;
@@ -68,7 +58,7 @@ typedef enum {
 - (void)select:(NSInteger)deviceIndex;
 - (void)connect:(NSInteger)deviceIndex;
 - (void)disconnect;
-- (VMNGCCPlayStates) getVMNGCCPlayState;
+- (VMNGCCPlayState) getVMNGCCPlayState;
 - (BOOL) sendMessage:(NSString *)theMessage;
 
 @end
